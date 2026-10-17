@@ -31,7 +31,7 @@ export function performAction(pet, action) {
       next.energy = clamp(next.energy + 25);
       break;
 
-    case "clean":
+    case "wash":
       next.cleanliness = clamp(next.cleanliness + 30);
       next.happiness = clamp(next.happiness + 5);
       break;
@@ -41,11 +41,11 @@ export function performAction(pet, action) {
   }
 
   next.mood =
-    next.energy <= 15 ? "sleepy" :
+    next.happiness >= 80 ? "happy" :
+    next.energy <= 20 ? "sleepy" :
     next.hunger >= 80 ? "hungry" :
-    next.happiness >= 80 ? "excited" :
-    next.cleanliness <= 20 ? "messy" :
-    "happy";
+    next.cleanliness <= 20 ? "scruffy" :
+    "neutral";
 
   return { ok: true, pet: next };
 }
