@@ -58,26 +58,22 @@ export default function App() {
       <main style={styles.page}>
       <form onSubmit={handleJoin} style={styles.card}>
         <div style={styles.cat} role="img" aria-label="Cat">🐱</div>
-        <h1 style={styles.heading}>Welcome to Pet Room!</h1>
         <p style={styles.description}>
-          Look after Mochi together with your friends.
         </p>
         <label htmlFor="guestName" style={styles.label}>
-          Your display name
         </label>
         <input
           id="guestName"
           value={guestName}
           onChange={(event) => setGuestName(event.target.value)}
-          placeholder="Enter your name"
+          placeholder="👋"
           maxLength={20}
           required
           style={styles.input}
         />
         <button type="submit" style={styles.button}>
-          Join the room →
+          →
         </button>
-        <small style={styles.note}>Demo mode · No account required</small>
       </form>
       </main>
     </>

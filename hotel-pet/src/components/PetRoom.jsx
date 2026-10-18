@@ -2,10 +2,10 @@ import "./PetRoom.css";
 
 // These IDs should match db petLogic.js actions.
 const ACTIONS = [
-  { id: "feed", icon: "🐟", label: "FEED", hint: "Snack time" },
-  { id: "play", icon: "🧶", label: "PLAY", hint: "Have fun" },
-  { id: "sleep", icon: "💤", label: "SLEEP", hint: "Recharge" },
-  { id: "wash", icon: "🫧", label: "WASH", hint: "Get clean" },
+  { id: "feed", icon: "🐟", label: "", hint: "Snack time" },
+  { id: "play", icon: "🧶", label: "", hint: "Have fun" },
+  { id: "sleep", icon: "💤", label: "", hint: "Recharge" },
+  { id: "wash", icon: "🫧", label: "", hint: "Get clean" },
 ];
 
 function clamp(value) {
@@ -120,20 +120,16 @@ export default function PetRoom({ pet = {}, guests = [], onAction, onLeave }) {
       <main className="pixel-pet-shell">
         <header className="pixel-pet-header">
           <div>
-            <div className="pixel-pet-eyebrow">★ THE LITTLE LOBBY ★</div>
-            <h1>CAT CLUB <span aria-hidden="true">♥</span></h1>
-            <p>ONE HOTEL. ONE CAT. EVERYONE CARES.</p>
           </div>
           {onLeave && (
             <button className="pixel-pet-exit" type="button" onClick={onLeave}>
-              ← EXIT
+              ← 👋
             </button>
           )}
         </header>
 
         <div className="pixel-pet-layout">
           <section className="pixel-pet-stage" aria-label={`${name}'s room`}>
-            <div className="pixel-pet-stage-label">ROOM 01 / {name.toUpperCase()}</div>
             <div className="pixel-pet-window" aria-hidden="true">
               <span className="pixel-pet-cloud pixel-pet-cloud--one" />
               <span className="pixel-pet-cloud pixel-pet-cloud--two" />
@@ -151,9 +147,7 @@ export default function PetRoom({ pet = {}, guests = [], onAction, onLeave }) {
                 {/* PERSON 3: Replace only <PixelCat ... /> with <CatCharacter mood={mood} /> */}
                 <PixelCat mood={mood} />
               </div>
-              <div className="pixel-pet-name-tag">♥ {name.toUpperCase()} ♥</div>
             </div>
-            <div className="pixel-pet-stage-bottom">HOME IS WHERE THE PAWS ARE ♪</div>
           </section>
 
           <aside className="pixel-pet-sidebar">
@@ -161,14 +155,14 @@ export default function PetRoom({ pet = {}, guests = [], onAction, onLeave }) {
               <div className="pixel-pet-section-heading">
                 <h2>CAT STATUS</h2><span aria-hidden="true">✿</span>
               </div>
-              <Meter icon="🐟" label="FULLNESS" value={fullness} type="fullness" />
-              <Meter icon="♥" label="HAPPINESS" value={happiness} type="happiness" />
-              <Meter icon="⚡" label="ENERGY" value={energy} type="energy" />
-              {hasCleanliness && <Meter icon="✦" label="CLEAN" value={cleanliness} type="cleanliness" />}
+              <Meter icon="🐟" label="" value={fullness} type="fullness" />
+              <Meter icon="♥" label="" value={happiness} type="happiness" />
+              <Meter icon="⚡" label="" value={energy} type="energy" />
+              {hasCleanliness && <Meter icon="✦" label="" value={cleanliness} type="cleanliness" />}
             </section>
 
             <section className="pixel-pet-panel pixel-pet-action-panel" aria-label="Care actions">
-              <div className="pixel-pet-section-heading"><h2>LET'S PLAY!</h2><span aria-hidden="true">🐾</span></div>
+              <div className="pixel-pet-section-heading"><h2></h2><span aria-hidden="true">🐾</span></div>
               <div className="pixel-pet-actions">
                 {ACTIONS.map((action) => (
                   <button
@@ -207,7 +201,7 @@ export default function PetRoom({ pet = {}, guests = [], onAction, onLeave }) {
             </section>
           </aside>
         </div>
-        <footer className="pixel-pet-footer">✦ TAKE CARE OF OUR LITTLE FRIEND ✦</footer>
+        <footer className="pixel-pet-footer"></footer>
       </main>
     </div>
   );
