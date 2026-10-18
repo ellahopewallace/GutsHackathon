@@ -1,0 +1,397 @@
+/* Woodblock cat rig. Every animated part rotates around a pivot given in the
+   cat's local coordinates (ground point = 0 0). Motion is kept small and slow:
+   the cats should feel alive without asking for attention. Timings can be
+   desynchronised per cat with --blink-delay, --ear-delay and --idle-delay. */
+.cat {
+  display: block;
+  overflow: visible;
+  width: 100%;
+  height: 100%;
+}
+.cat--head {
+  overflow: hidden;
+}
+.cat-ink {
+  fill: none;
+  stroke: var(--cat-line, #4f4b7c);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cat-ink-fill {
+  stroke: var(--cat-line, #4f4b7c);
+  stroke-width: 1.05;
+  stroke-linejoin: round;
+}
+.cat-mark {
+  opacity: 0.85;
+}
+.cat-liner {
+  fill: none;
+  stroke-width: 1;
+  stroke-linecap: round;
+  opacity: 0.8;
+}
+.cat-hair {
+  fill: none;
+  stroke-width: 0.5;
+  stroke-linecap: round;
+  opacity: 0.75;
+}
+.cat-whiskers {
+  stroke-width: 0.45;
+  opacity: 0.75;
+}
+.cat-shadow {
+  fill: #2f3470;
+  opacity: 0.13;
+}
+
+/* ---- pose crossfade ---- */
+.cat-pose {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.32s var(--ease, ease), visibility 0s linear 0.32s;
+}
+[data-pose="sit"] .cat-pose--sit,
+[data-pose="walk"] .cat-pose--walk,
+[data-pose="sleep"] .cat-pose--sleep {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.32s var(--ease, ease), visibility 0s;
+}
+
+/* ---- face states ---- */
+.eye-happy,
+.eye-closed,
+.cat-mouth-open,
+.cat-tongue,
+.cat-bowl,
+.cat-scruff {
+  display: none;
+}
+[data-act="happy"] .eye-open,
+[data-act="eat"] .eye-open,
+[data-act="groom"] .eye-open {
+  display: none;
+}
+[data-act="happy"] .eye-happy,
+[data-act="eat"] .eye-closed,
+[data-act="groom"] .eye-closed {
+  display: inline;
+}
+[data-act="meow"] .cat-mouth,
+[data-act="beg"] .cat-mouth {
+  display: none;
+}
+[data-act="meow"] .cat-mouth-open,
+[data-act="beg"] .cat-mouth-open,
+[data-act="groom"] .cat-tongue,
+[data-act="eat"] .cat-bowl,
+[data-scruffy="true"] .cat-scruff {
+  display: inline;
+}
+[data-act="play"] .cat-pupil {
+  rx: 2.4px;
+  ry: 3px;
+}
+/* A soft blush whenever the cat is content and loved. */
+.cat-blush {
+  opacity: 0;
+  transition: opacity 0.6s var(--ease, ease);
+}
+[data-act="happy"] .cat-blush,
+[data-act="eat"] .cat-blush {
+  opacity: 0.6;
+}
+
+/* ---- idle life: blink, ears, breathing, tail ----
+   Every animation is scoped to the visible pose so hidden poses cost nothing. */
+.cat-eyes--sit .eye-open {
+  transform-origin: 0 -77.8px;
+}
+[data-pose="sit"] .cat-eyes--sit .eye-open {
+  animation: cat-blink 6s ease-in-out infinite;
+  animation-delay: var(--blink-delay, 0s);
+}
+.cat-eyes--walk .eye-open {
+  transform-origin: 38px -61.4px;
+}
+[data-pose="walk"] .cat-eyes--walk .eye-open {
+  animation: cat-blink 5.2s ease-in-out infinite;
+  animation-delay: var(--blink-delay, 0s);
+}
+@keyframes cat-blink {
+  0%, 91%, 100% { transform: scaleY(1); }
+  94.5% { transform: scaleY(0.1); }
+}
+
+.sit-ear--l {
+  transform-origin: -13px -89px;
+}
+.sit-ear--r {
+  transform-origin: 13px -89px;
+}
+[data-pose="sit"] .sit-ear--l {
+  animation: ear-flick-l 9s ease-in-out infinite;
+  animation-delay: var(--ear-delay, 0s);
+}
+[data-pose="sit"] .sit-ear--r {
+  animation: ear-flick-r 11s ease-in-out infinite;
+  animation-delay: calc(var(--ear-delay, 0s) * -1.7);
+}
+@keyframes ear-flick-l {
+  0%, 84%, 100% { transform: rotate(0); }
+  89% { transform: rotate(-7deg); }
+  94% { transform: rotate(-1deg); }
+}
+@keyframes ear-flick-r {
+  0%, 84%, 100% { transform: rotate(0); }
+  89% { transform: rotate(7deg); }
+  94% { transform: rotate(1deg); }
+}
+
+[data-pose="sit"] .sit-body {
+  transform-origin: 0 0;
+  animation: cat-breathe 4.4s ease-in-out infinite;
+}
+@keyframes cat-breathe {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.008, 1.016); }
+}
+
+[data-pose="sit"] .sit-tail {
+  transform-origin: 22px -10px;
+  animation: sit-tail 5.6s ease-in-out infinite;
+  animation-delay: var(--idle-delay, 0s);
+}
+@keyframes sit-tail {
+  0%, 100% { transform: rotate(0); }
+  40% { transform: rotate(-5deg); }
+  70% { transform: rotate(2deg); }
+}
+
+[data-pose="sit"] .sit-head {
+  transform-origin: 0 -60px;
+  animation: head-idle 14s ease-in-out infinite;
+  animation-delay: var(--idle-delay, 0s);
+}
+@keyframes head-idle {
+  0%, 26%, 62%, 100% { transform: rotate(0); }
+  34%, 52% { transform: rotate(-4deg); }
+  72%, 86% { transform: rotate(3deg); }
+}
+
+/* ---- sitting activities ---- */
+[data-act="happy"] .sit-head {
+  animation: head-happy 1.9s ease-in-out infinite;
+}
+@keyframes head-happy {
+  0%, 100% { transform: rotate(-3.5deg); }
+  50% { transform: rotate(3.5deg) translateY(-0.8px); }
+}
+[data-act="happy"] .sit-body {
+  animation: cat-purr 0.5s ease-in-out infinite;
+}
+@keyframes cat-purr {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.006, 1.01); }
+}
+
+[data-act="groom"] .sit-head {
+  animation: head-groom 1.8s ease-in-out infinite;
+}
+@keyframes head-groom {
+  0%, 100% { transform: translate(-2px, 7px) rotate(-20deg); }
+  50% { transform: translate(-1px, 5.5px) rotate(-15deg); }
+}
+
+[data-act="eat"] .sit-head {
+  animation: head-eat 0.8s ease-in-out infinite alternate;
+}
+@keyframes head-eat {
+  from { transform: translateY(8px); }
+  to { transform: translateY(9.5px); }
+}
+
+[data-act="meow"] .sit-head,
+[data-act="beg"] .sit-head {
+  animation: head-meow 2s ease-in-out infinite;
+}
+@keyframes head-meow {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(-4deg) translateY(-1px); }
+}
+
+/* ---- walking & running ---- */
+.walk-leg--front-near,
+.walk-leg--front-far {
+  transform-origin: 21px -30px;
+}
+.walk-leg--back-near,
+.walk-leg--back-far {
+  transform-origin: -20px -29px;
+}
+[data-pose="walk"] .walk-leg--front-near,
+[data-pose="walk"] .walk-leg--back-far {
+  animation: leg-walk var(--stride, 0.66s) ease-in-out infinite;
+}
+[data-pose="walk"] .walk-leg--front-far,
+[data-pose="walk"] .walk-leg--back-near {
+  animation: leg-walk var(--stride, 0.66s) ease-in-out infinite;
+  animation-delay: calc(var(--stride, 0.66s) / -2);
+}
+@keyframes leg-walk {
+  0%, 100% { transform: rotate(-18deg); }
+  50% { transform: rotate(16deg); }
+}
+[data-pose="walk"] .walk-bob {
+  animation: walk-bob calc(var(--stride, 0.66s) / 2) ease-in-out infinite alternate;
+}
+@keyframes walk-bob {
+  from { transform: translateY(0); }
+  to { transform: translateY(-1px); }
+}
+.walk-tail {
+  transform-origin: -27px -42px;
+}
+[data-pose="walk"] .walk-tail {
+  animation: walk-tail 1.8s ease-in-out infinite;
+}
+@keyframes walk-tail {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(5deg); }
+}
+.walk-head {
+  transform-origin: 26px -50px;
+}
+[data-pose="walk"] .walk-head {
+  animation: walk-head calc(var(--stride, 0.66s)) ease-in-out infinite;
+}
+@keyframes walk-head {
+  0%, 100% { transform: rotate(0); }
+  50% { transform: rotate(-1.5deg) translateY(0.5px); }
+}
+
+/* Running: faster, wider strides, a light bound. */
+[data-gait="run"] {
+  --stride: 0.4s;
+}
+[data-gait="run"][data-pose="walk"] .walk-leg--front-near,
+[data-gait="run"][data-pose="walk"] .walk-leg--front-far {
+  animation-name: leg-run-front;
+}
+[data-gait="run"][data-pose="walk"] .walk-leg--back-near,
+[data-gait="run"][data-pose="walk"] .walk-leg--back-far {
+  animation-name: leg-run-back;
+}
+@keyframes leg-run-front {
+  0%, 100% { transform: rotate(-30deg); }
+  50% { transform: rotate(24deg); }
+}
+@keyframes leg-run-back {
+  0%, 100% { transform: rotate(-24deg); }
+  50% { transform: rotate(28deg); }
+}
+[data-gait="run"][data-pose="walk"] .walk-bob {
+  animation-name: run-bob;
+}
+@keyframes run-bob {
+  from { transform: translateY(0) rotate(0.8deg); }
+  to { transform: translateY(-2.6px) rotate(-1deg); }
+}
+[data-gait="run"][data-pose="walk"] .walk-tail {
+  animation: run-tail 0.8s ease-in-out infinite;
+}
+@keyframes run-tail {
+  0%, 100% { transform: rotate(8deg); }
+  50% { transform: rotate(16deg); }
+}
+
+/* Standing still in profile (nose boops): legs planted, a gentle lean. */
+[data-pose="walk"][data-act="boop"] .walk-leg,
+[data-pose="walk"][data-act="boop"] .walk-bob {
+  animation: none;
+}
+[data-pose="walk"][data-act="boop"] .walk-head {
+  animation: head-boop 2.2s ease-in-out infinite;
+}
+@keyframes head-boop {
+  0%, 100% { transform: rotate(0); }
+  45%, 60% { transform: translate(2.5px, 1px) rotate(4deg); }
+}
+[data-pose="walk"][data-act="boop"] .walk-tail {
+  animation: boop-tail 3s ease-in-out infinite;
+}
+@keyframes boop-tail {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(5deg); }
+}
+
+/* Playing with a toy: crouch, wiggle, a little hop, repeat. */
+[data-pose="walk"][data-act="play"] .walk-leg {
+  animation: none;
+}
+[data-pose="walk"][data-act="play"] .walk-bob {
+  transform-origin: 24px 0;
+  animation: play-pounce 2.4s ease-in-out infinite;
+  animation-delay: var(--idle-delay, 0s);
+}
+@keyframes play-pounce {
+  0%, 100% { transform: translateY(3.5px) rotate(-1deg); }
+  15% { transform: translateY(3.5px) rotate(1deg); }
+  30% { transform: translateY(3.5px) rotate(-1deg); }
+  45% { transform: translateY(4px) rotate(0); }
+  60% { transform: translate(5px, -6px) rotate(-3deg); }
+  75% { transform: translate(7px, 0) rotate(1deg); }
+  90% { transform: translateY(3.5px) rotate(-0.5deg); }
+}
+[data-pose="walk"][data-act="play"] .walk-tail {
+  animation: play-tail 0.7s ease-in-out infinite alternate;
+}
+@keyframes play-tail {
+  from { transform: rotate(-8deg); }
+  to { transform: rotate(10deg); }
+}
+[data-pose="walk"][data-act="play"] .walk-head {
+  animation: none;
+  transform: translateY(2px) rotate(5deg);
+}
+
+/* ---- sleeping ---- */
+.sleep-breathe {
+  transform-origin: 0 0;
+}
+[data-pose="sleep"] .sleep-breathe {
+  animation: sleep-breathe 4.4s ease-in-out infinite;
+}
+@keyframes sleep-breathe {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.012, 1.036); }
+}
+.sleep-tail {
+  transform-origin: -31px -8px;
+}
+[data-pose="sleep"] .sleep-tail {
+  animation: sleep-tail 8s ease-in-out infinite;
+  animation-delay: var(--idle-delay, 0s);
+}
+@keyframes sleep-tail {
+  0%, 78%, 100% { transform: rotate(0); }
+  86% { transform: rotate(-2.5deg); }
+  93% { transform: rotate(0.8deg); }
+}
+
+/* Bell sways a little whenever the cat moves. */
+[data-pose="sit"] .cat-pose--sit .cat-bell-ball,
+[data-pose="walk"] .cat-pose--walk .cat-bell-ball {
+  animation: bell-sway 3.2s ease-in-out infinite;
+}
+@keyframes bell-sway {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(4deg); }
+}
+
+/* Avatars are small and everywhere: keep them still. */
+.cat--head * {
+  animation: none !important;
+}

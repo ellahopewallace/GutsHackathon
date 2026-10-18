@@ -1,0 +1,269 @@
+/* Choosing and naming a cat: one centred column, so the eye travels straight
+   down from the cat, to its name, to the options. */
+.picker {
+  width: min(100%, 440px);
+  margin: 0 auto;
+  padding: calc(10px + var(--safe-top)) 16px 0;
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+}
+.picker-top {
+  justify-self: stretch;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.picker-top .brand {
+  margin-right: auto;
+}
+
+/* ---- the cat on its cushion ---- */
+.picker-stage {
+  position: relative;
+  width: 100%;
+  height: clamp(250px, 38vh, 330px);
+  overflow: hidden;
+  border-radius: 26px;
+  background:
+    radial-gradient(ellipse 60% 18% at 50% 86%, rgba(48, 54, 110, 0.12), transparent 70%),
+    linear-gradient(#d3daf1, #f0e3ec 62%, #ccd1ea 62% 100%);
+  box-shadow: var(--shadow-lift);
+  isolation: isolate;
+}
+:root[data-theme="night"] .picker-stage {
+  background:
+    radial-gradient(ellipse 60% 18% at 50% 86%, rgba(14, 16, 48, 0.3), transparent 70%),
+    linear-gradient(#3a3f7c, #6d64a4 62%, #6b70a8 62% 100%);
+}
+.picker-stage-sun {
+  position: absolute;
+  left: 50%;
+  top: 9%;
+  width: 150px;
+  height: 150px;
+  margin-left: -75px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 45% 40%, #f7c6d1, #eda9ba);
+}
+:root[data-theme="night"] .picker-stage-sun {
+  background: radial-gradient(circle at 45% 40%, #fcf4d6, #efe3be);
+  box-shadow: 0 0 60px 10px rgba(252, 244, 214, 0.15);
+}
+/* Periwinkle, so the pink name tag below stands apart from it. */
+.picker-cushion {
+  position: absolute;
+  left: 50%;
+  bottom: 15%;
+  width: 190px;
+  height: 40px;
+  margin-left: -95px;
+  border-radius: 46% 46% 50% 50% / 60% 60% 40% 40%;
+  background: #aab5e6;
+  box-shadow: inset 0 6px 0 rgba(255, 255, 255, 0.2), 0 6px 10px -4px rgba(48, 54, 110, 0.3);
+}
+:root[data-theme="night"] .picker-cushion {
+  background: #6a76b6;
+}
+.picker-cat {
+  position: absolute;
+  left: 50%;
+  bottom: calc(15% + 12px);
+  width: 230px;
+  height: 216px;
+  margin-left: -115px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.picker-cat .cat {
+  overflow: visible;
+}
+.picker-purr {
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: #3d4277;
+  text-shadow: 0 0 4px #f6f6fd, 0 0 4px #f6f6fd;
+  pointer-events: none;
+  animation: purr-word 2s var(--ease) forwards;
+}
+:root[data-theme="night"] .picker-purr {
+  color: #eef0fd;
+  text-shadow: 0 0 4px rgba(36, 40, 90, 0.9), 0 0 2px rgba(36, 40, 90, 0.9);
+}
+@keyframes purr-word {
+  0% { opacity: 0; transform: translate(-50%, 8px); }
+  25% { opacity: 1; transform: translate(-50%, -4px); }
+  75% { opacity: 1; transform: translate(-50%, -14px); }
+  100% { opacity: 0; transform: translate(-50%, -22px); }
+}
+
+/* ---- the nameplate ----
+   The cat's pink name tag (the same pink as its tag in the courtyard), hung
+   over the bottom edge of the picture right under the cat. The dice sits
+   beside it so the tag itself stays centred under the cat. */
+.nameplate {
+  position: relative;
+  z-index: 2;
+  margin-top: -44px;
+}
+.nameplate-tag {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: min(58vw, 230px);
+  height: 50px;
+  padding: 0 34px 0 14px;
+  border-radius: 999px;
+  background: #f5c6d5;
+  color: #4b3f74;
+  box-shadow: inset 0 0 0 1.5px rgba(75, 63, 116, 0.16), var(--shadow);
+  transition: box-shadow 0.3s var(--ease);
+}
+/* The little ring it hangs from, like a tag on a collar. */
+.nameplate-tag::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -10px;
+  width: 13px;
+  height: 13px;
+  margin-left: -6.5px;
+  border: 2px solid #d29ab4;
+  border-radius: 50%;
+}
+.nameplate-tag:focus-within {
+  box-shadow: inset 0 0 0 2.5px #de89a3, var(--shadow);
+}
+.nameplate-tag svg {
+  flex: none;
+  opacity: 0.75;
+}
+.nameplate-tag input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: 700 19px var(--font-ui);
+  text-align: center;
+  outline: none;
+}
+.nameplate-tag input::placeholder {
+  color: rgba(75, 63, 116, 0.45);
+}
+.nameplate-dice {
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px var(--hairline), var(--shadow);
+  transform: translateY(-50%);
+  transition: transform 0.25s var(--ease);
+}
+.nameplate-dice:active {
+  transform: translateY(-50%) rotate(-20deg) scale(0.94);
+}
+
+.picker-breed {
+  display: grid;
+  justify-items: center;
+  gap: 1px;
+}
+.picker-breed strong {
+  font-family: var(--font-display);
+  font-size: 19px;
+}
+.picker-breed span {
+  font-family: var(--font-display);
+  font-size: 12px;
+  color: var(--rose);
+}
+
+/* ---- choices ---- */
+.picker-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+.row-gap {
+  width: 10px;
+}
+.choice {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1.5px var(--hairline), var(--shadow);
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), background-color 0.4s var(--ease);
+}
+.choice svg {
+  width: 34px;
+  height: 34px;
+}
+.choice:active {
+  transform: scale(0.94);
+}
+.choice.is-on {
+  background: var(--sakura);
+  box-shadow: inset 0 0 0 2.5px var(--sakura-deep), var(--shadow);
+}
+.choice-face {
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+.choice-face .cat {
+  width: 100%;
+  height: 100%;
+}
+.choice:has(.choice-face) {
+  width: 54px;
+  height: 54px;
+}
+.choice-color {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(48, 54, 110, 0.25);
+}
+
+/* The way in stays under the thumb while the options scroll past. */
+.picker-cta {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: grid;
+  justify-items: center;
+  width: calc(100% + 32px);
+  padding: 14px 16px calc(14px + var(--safe-bottom));
+  background: linear-gradient(color-mix(in srgb, var(--bg) 0%, transparent), var(--bg) 40%);
+}
+.picker-cta .soft-button {
+  width: 68px;
+  min-height: 68px;
+  padding: 0;
+}

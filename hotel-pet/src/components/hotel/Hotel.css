@@ -1,0 +1,524 @@
+/* Hotel screen. The courtyard fills the screen; the interface is small, soft
+   and sits at the edges (top for glancing, bottom for the thumb). */
+.hotel {
+  height: 100vh;
+  height: 100dvh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.hotel-main {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--bg);
+}
+
+/* ---- the courtyard ---- */
+.stage {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+.stage .scene {
+  position: absolute;
+  inset: 0;
+}
+
+/* ---- top bar, floating over the sky ---- */
+.topbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: calc(10px + var(--safe-top)) 12px 10px;
+  pointer-events: none;
+}
+.topbar > * {
+  pointer-events: auto;
+}
+.topbar-brand {
+  margin-right: auto;
+  padding: 5px 13px 5px 5px;
+  border-radius: 999px;
+  background: var(--glass);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.topbar-brand .hanko {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  font-size: 17px;
+}
+.topbar-brand strong {
+  font-size: 16px;
+}
+.topbar .icon-button {
+  background: var(--glass);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* ---- dock: your cat and the five ways to care for it ---- */
+.dock {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px calc(12px + var(--safe-bottom));
+  border-radius: 26px 26px 0 0;
+  background: var(--surface);
+  box-shadow: 0 -10px 26px -18px rgba(48, 54, 110, 0.4);
+  transition: background-color 0.6s var(--ease);
+}
+.dock-me {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--ink);
+  transition: transform 0.25s var(--ease);
+}
+.dock-me:active {
+  transform: scale(0.95);
+}
+.dock-me-ring {
+  position: absolute;
+  inset: 0;
+}
+.ring-track {
+  fill: none;
+  stroke: var(--hairline);
+  stroke-width: 3.5;
+}
+.ring-fill {
+  fill: none;
+  stroke: var(--sakura-deep);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.9s var(--ease);
+}
+.dock-me-caret {
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--sakura);
+  color: var(--ink);
+  transform: translateX(-50%);
+  animation: caret-hint 2.4s ease-in-out 1.2s 3;
+}
+.dock-me-caret svg {
+  transition: transform 0.35s var(--ease);
+}
+.dock-me.is-open .dock-me-caret svg {
+  transform: rotate(180deg);
+}
+@keyframes caret-hint {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -3px); }
+}
+.dock-actions {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  justify-items: center;
+  gap: 4px;
+}
+/* Each care button has its own soft colour, so it can be found at a glance. */
+.dock-btn {
+  --tint: var(--surface-2);
+  display: grid;
+  place-items: center;
+  width: 54px;
+  max-width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--tint) var(--tint-mix), var(--surface-2));
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px var(--hairline), 0 4px 10px -6px rgba(48, 54, 110, 0.45);
+  transition: transform 0.25s var(--ease), background-color 0.4s var(--ease);
+}
+.dock-btn[data-action="feed"] {
+  --tint: var(--tint-feed);
+}
+.dock-btn[data-action="play"] {
+  --tint: var(--tint-play);
+}
+.dock-btn[data-action="brush"] {
+  --tint: var(--tint-brush);
+}
+.dock-btn[data-action="nap"] {
+  --tint: var(--tint-nap);
+}
+.dock-btn[data-action="pet"] {
+  --tint: var(--tint-pet);
+}
+.dock-btn:active {
+  transform: scale(0.92);
+}
+.dock-btn.is-shaking {
+  background: var(--sakura);
+  animation: nudge 0.8s var(--ease);
+}
+@keyframes nudge {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(1px); }
+}
+
+/* ---- small popovers, low on the screen ---- */
+.popover {
+  position: absolute;
+  bottom: 12px;
+  z-index: 22;
+  border-radius: 24px;
+  background: var(--glass);
+  box-shadow: var(--shadow-lift);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: pop-in 0.45s var(--ease-out);
+}
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(10px); }
+}
+.popover--stats {
+  left: 12px;
+  padding: 10px 14px 14px;
+}
+.popover--stats .gauges {
+  gap: 10px;
+}
+.popover--stats .gauge {
+  width: 50px;
+  height: 50px;
+}
+.popover-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 10px;
+}
+.popover-head strong {
+  font-family: var(--font-display);
+  font-size: 17px;
+}
+.popover-mood {
+  display: grid;
+  margin-left: auto;
+  color: var(--ink);
+}
+.popover--cat {
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  max-width: calc(100% - 24px);
+  margin: 0 auto;
+  padding: 7px 8px 7px 7px;
+  border-radius: 999px;
+}
+.pill-name {
+  min-width: 0;
+  margin-right: 4px;
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: 17px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.pill-btn {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--ink);
+  transition: transform 0.25s var(--ease), background-color 0.4s var(--ease);
+}
+.pill-btn:active {
+  transform: scale(0.92);
+}
+.pill-btn.is-sent {
+  background: var(--sakura);
+}
+
+/* ---- the icon that floats from a button to the cat ---- */
+.flight {
+  position: fixed;
+  z-index: 70;
+  width: 30px;
+  height: 30px;
+  color: var(--ink);
+  pointer-events: none;
+  filter: drop-shadow(0 4px 6px rgba(48, 54, 110, 0.25));
+}
+
+/* ---- sheets ---- */
+.sheet-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+.sheet-layer.is-open {
+  pointer-events: auto;
+}
+.sheet-scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(30, 34, 80, 0.28);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+.is-open .sheet-scrim {
+  opacity: 1;
+}
+.sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  max-width: 480px;
+  max-height: 72dvh;
+  margin: 0 auto;
+  padding: 6px 16px calc(16px + var(--safe-bottom));
+  border-radius: 28px 28px 0 0;
+  background: var(--surface);
+  background-image: var(--paper-texture);
+  box-shadow: 0 -12px 30px -14px rgba(30, 34, 80, 0.4);
+  transform: translateY(105%);
+  transition: transform 0.5s var(--ease-out);
+}
+.is-open .sheet {
+  transform: none;
+}
+.sheet-grip {
+  justify-self: center;
+  width: 40px;
+  height: 5px;
+  margin: 4px 0 8px;
+  border-radius: 99px;
+  background: var(--hairline);
+}
+.sheet-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  color: var(--ink);
+}
+.sheet-icon {
+  display: grid;
+}
+.sheet-body {
+  overflow-y: auto;
+  padding-top: 4px;
+  overscroll-behavior: contain;
+}
+.net-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #8cc7b5;
+}
+.net-dot--local,
+.net-dot--solo,
+.net-dot--connecting {
+  background: var(--gold);
+}
+.net-dot--error {
+  background: var(--rose);
+}
+
+/* ---- who's here ---- */
+.faces-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 14px 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.face {
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  width: 100%;
+  padding: 6px 0;
+  border: 0;
+  border-radius: 18px;
+  background: none;
+  color: var(--ink);
+  transition: background-color 0.3s;
+}
+.face:not(:disabled):active {
+  background: var(--surface-2);
+}
+.face:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.face-avatar {
+  position: relative;
+}
+.face.is-me .avatar {
+  box-shadow: 0 0 0 3px var(--sakura-deep);
+}
+.face-dot {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #8cc7b5;
+  box-shadow: 0 0 0 2.5px var(--surface);
+}
+.face strong {
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.checkout {
+  display: grid;
+  margin: 16px auto 4px;
+}
+
+/* ---- diary ---- */
+.diary {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.diary-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 6px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  animation: screen-in 0.6s var(--ease-out) both;
+}
+.diary-line:nth-child(odd) {
+  background: color-mix(in srgb, var(--surface-2) 55%, transparent);
+}
+.diary-line--quiet {
+  opacity: 0.7;
+}
+.who {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ---- shoji doors on first arrival ---- */
+.door-reveal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+}
+.door {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50.5%;
+  background-color: #f6f3fb;
+  background-image:
+    linear-gradient(90deg, transparent calc(100% - 2px), #c0b7dc calc(100% - 2px)),
+    linear-gradient(transparent calc(100% - 2px), #c0b7dc calc(100% - 2px));
+  background-size: 48px 64px;
+  box-shadow: inset 0 0 0 10px #7680bb;
+  animation: door-open 1.4s cubic-bezier(0.65, 0, 0.35, 1) 0.8s forwards;
+}
+:root[data-theme="night"] .door {
+  background-color: #f3d7ad;
+  box-shadow: inset 0 0 0 10px #3c4583;
+}
+.door--left {
+  left: 0;
+  --to: -100%;
+}
+.door--right {
+  right: 0;
+  --to: 100%;
+}
+@keyframes door-open {
+  to { transform: translateX(var(--to)); }
+}
+.door-title {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  color: #3d4277;
+  font-family: var(--font-display);
+  transform: translate(-50%, -50%);
+  animation: door-title 1.6s var(--ease) forwards;
+}
+.door-title b {
+  font-size: 32px;
+  font-weight: 800;
+}
+@keyframes door-title {
+  0% { opacity: 0; transform: translate(-50%, -44%); }
+  30%, 55% { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0; transform: translate(-50%, -56%); }
+}
+
+/* ---- wider screens: one framed phone, nothing else competing ---- */
+@media (min-width: 760px) {
+  .hotel {
+    padding: 24px;
+  }
+  .hotel-main {
+    width: min(440px, 100%);
+    height: min(880px, calc(100dvh - 48px));
+    overflow: hidden;
+    border-radius: 34px;
+    box-shadow: 0 0 0 8px var(--surface-2), 0 0 0 9px var(--hairline), var(--shadow-lift);
+  }
+}

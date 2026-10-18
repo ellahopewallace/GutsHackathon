@@ -1,111 +1,271 @@
+/* Purr Inn: global theme.
+   Soft pastel blues by day; the same courtyard by lantern light at night,
+   deep periwinkle rather than black, cream rather than white. A touch of
+   sakura pink marks "you" and the things you do. */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --bg: #e4e8f6;
+  --surface: #f1f2fb;
+  --surface-2: #dde1f4;
+  --ink: #3d4277;
+  --ink-soft: #6a6f9f;
+  --ink-faint: #9a9ec6;
+  --hairline: rgba(61, 66, 119, 0.15);
+  --rose: #e28aa5;
+  --rose-deep: #cd7390;
+  --sakura: #f6d2de;
+  --sakura-deep: #eeaec2;
+  --indigo: #6b79c5;
+  --gold: #e8c77d;
+  --glass: rgba(234, 237, 250, 0.9);
+  --shadow: 0 6px 18px -8px rgba(48, 54, 110, 0.38);
+  --shadow-lift: 0 14px 30px -14px rgba(48, 54, 110, 0.48);
+  /* Pastel fills for the care buttons; mixed with the surface at night. */
+  --tint-feed: #f9dbd3;
+  --tint-play: #e3dbf6;
+  --tint-brush: #d3ebe6;
+  --tint-nap: #d0d8f5;
+  --tint-pet: #f6cbd9;
+  --tint-mix: 100%;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --font-display: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
+  --font-ui: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  --paper-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .25 0 0 0 0 .27 0 0 0 0 .5 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+  color-scheme: light;
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--ink);
   background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  -webkit-tap-highlight-color: transparent;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+:root[data-theme="night"] {
+  --bg: #2c3065;
+  --surface: #3a3f7c;
+  --surface-2: #474d8f;
+  --ink: #e7e9fb;
+  --ink-soft: #b9bde6;
+  --ink-faint: #8f94c4;
+  --hairline: rgba(231, 233, 251, 0.14);
+  --rose: #ee9fb7;
+  --rose-deep: #de89a3;
+  --sakura: #d699b2;
+  --sakura-deep: #c6839f;
+  --indigo: #9aa6e0;
+  --gold: #ecd08e;
+  --glass: rgba(58, 63, 124, 0.9);
+  --shadow: 0 6px 18px -8px rgba(10, 12, 40, 0.6);
+  --shadow-lift: 0 14px 30px -14px rgba(10, 12, 40, 0.7);
+  --tint-mix: 42%;
+  color-scheme: dark;
 }
 
-body {
-  margin: 0;
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background-color: var(--bg);
+  background-image: var(--paper-texture);
+  transition: background-color 0.6s var(--ease);
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
+body {
+  overscroll-behavior: none;
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
+
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
 }
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.1;
+}
+
 p {
   margin: 0;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+:focus-visible {
+  outline: 2.5px solid var(--rose);
+  outline-offset: 3px;
 }
 
-code {
+/* Soft round button. --primary is the rose call to action. */
+.soft-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow: var(--shadow);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), background-color 0.4s var(--ease), opacity 0.3s;
+}
+.soft-button:active {
+  transform: scale(0.96);
+}
+.soft-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.soft-button--primary {
+  background: var(--rose);
+  color: #fdf8fb;
+}
+
+/* Round icon-only button. */
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  transition: transform 0.25s var(--ease), background-color 0.4s var(--ease);
+}
+.icon-button:active {
+  transform: scale(0.94);
+}
+
+/* A cat face in a circle (see ui/common.jsx). */
+.avatar {
+  flex: none;
+  display: inline-block;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--surface-2);
+  box-shadow: inset 0 0 0 1.5px var(--hairline);
+}
+.avatar .cat {
+  width: 100%;
+  height: 100%;
+}
+
+/* Who is here: overlapping faces and a count. */
+.faces-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 44px;
+  padding: 0 13px 0 7px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--glass);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: transform 0.25s var(--ease);
+}
+button.faces-pill:active {
+  transform: scale(0.96);
+}
+.faces-pill b {
   font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+}
+.faces {
+  display: flex;
+}
+.faces .avatar {
+  margin-left: -9px;
+  box-shadow: 0 0 0 2px var(--surface);
+}
+.faces .avatar:first-child {
+  margin-left: 0;
+}
+
+/* Small rose seal used for the logo. */
+.hanko {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--rose);
+  color: #fdf8fb;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 21px;
+  line-height: 1;
+  box-shadow: inset 0 0 0 2px var(--rose), inset 0 0 0 3.5px rgba(253, 248, 251, 0.55);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+.brand strong {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.screen-enter {
+  animation: screen-in 0.7s var(--ease-out) both;
+}
+@keyframes screen-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

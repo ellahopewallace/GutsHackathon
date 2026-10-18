@@ -1,3 +1,6 @@
+// The Firebase app and its Firestore database, configured from the
+// VITE_FIREBASE_* variables in .env. Only loaded when those are set
+// (see net/hotelNet.js); without them the app runs in local mode.
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
