@@ -36,7 +36,7 @@ npm run dev -- --host  # also reachable from phones on the same Wi-Fi (use the "
 over `BroadcastChannel`). Open two windows side by side to demo multiplayer on
 one laptop.
 
-**Across phones**, add a `.env` in this folder with the Firebase web config
+**Across phones**, copy `.env.example` to `.env` in this folder and fill in the Firebase web config
 (the same variables `src/lib/firebase.js` already reads):
 
 ```
@@ -46,7 +46,7 @@ VITE_FIREBASE_PROJECT_ID=...
 VITE_FIREBASE_APP_ID=...
 ```
 
-Firestore needs to allow the hotel collections. For the hackathon demo:
+Firestore needs to allow the hotel collections. Publish `firestore.rules` from this folder in the Firebase console (Firestore > Rules), or run `npx firebase-tools deploy --only firestore:rules --project gutshackathon`. The rules are:
 
 ```
 rules_version = '2';
@@ -59,7 +59,7 @@ service cloud.firestore {
 }
 ```
 
-If Firestore can't be reached, the app falls back to local mode automatically.
+If Firestore can't be reached, or the rules have not been published yet, the app falls back to local mode automatically.
 
 Guests are anonymous: each tab gets a random id, and all anyone sees is the
 cat. Two cats can share a name.

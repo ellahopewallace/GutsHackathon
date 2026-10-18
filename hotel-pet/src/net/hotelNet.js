@@ -96,7 +96,10 @@ async function firebaseHotel({ hotelId, onGuests, onEvents, onStatus }) {
     (snap) => {
       const now = Date.now();
       onGuests(snap.docs.map((d) => d.data()).filter((g) => now - (g.lastSeen ?? 0) < RECENT_MS));
-      onStatus("online");
+      // The first snapshot is often served from the local cache (our own
+      // check-in) before the server has said anything; only a server
+      // snapshot proves the connection works.
+      if (!snap.metadata.fromCache) onStatus("online");
     },
     (err) => onStatus("error", err),
   );
@@ -104,7 +107,14 @@ async function firebaseHotel({ hotelId, onGuests, onEvents, onStatus }) {
   const stopEvents = onSnapshot(
     query(eventsCol, where("at", ">", Date.now() - 90000), orderBy("at")),
     (snap) => {
-      const added = snap.docChanges().filter((c) => c.type === "added").map((c) => c.doc.data());
+      // The query's start time is fixed when we connect, so also drop
+      // anything older than 90 s here for phones that stay open a long time.
+      const cutoff = Date.now() - 90000;
+      const added = snap
+        .docChanges()
+        .filter((c) => c.type === "added")
+        .map((c) => c.doc.data())
+        .filter((e) => (e.at ?? 0) > cutoff);
       if (added.length) onEvents(added);
     },
     (err) => onStatus("error", err),
@@ -164,22 +174,51 @@ export function connectHotel(options) {
     for (const [method, args] of queue.splice(0)) backend[method](...args);
   };
 
+  // What we have told the hotel about ourselves, so that if Firestore drops
+  // out before it ever answered (wrong config, rules not published, no
+  // network) we can check in again over the local channel instead.
+  let self = null;
+  let online = false; // Firestore answered from the server at least once
+  let dropped = false; // we gave up on Firestore
+  const fallback = (err) => {
+    if (closed || online || dropped) return;
+    dropped = true;
+    console.warn("Firestore unavailable, using local mode", err);
+    backend?.close();
+    adopt(localHotel(options));
+    if (self) backend.join(self);
+  };
+
   if (FIREBASE_READY) {
-    firebaseHotel(options)
+    firebaseHotel({
+      ...options,
+      onStatus: (s, err) => {
+        if (dropped) return undefined; // late noise from the closed listeners
+        if (s === "online") online = true;
+        if (s === "error" && !online) return fallback(err);
+        return options.onStatus(s, err);
+      },
+    })
       .then(adopt)
-      .catch((err) => {
-        console.warn("Firestore unavailable, using local mode", err);
-        adopt(localHotel(options));
-      });
+      .catch(fallback);
   } else {
     adopt(localHotel(options));
   }
 
   return {
-    join: (guest) => call("join", guest),
-    update: (partial) => call("update", partial),
+    join: (guest) => {
+      self = guest;
+      call("join", guest);
+    },
+    update: (partial) => {
+      if (self) self = { ...self, ...partial };
+      call("update", partial);
+    },
     send: (event) => call("send", event),
-    leave: () => call("leave"),
+    leave: () => {
+      self = null;
+      call("leave");
+    },
     close() {
       closed = true;
       backend?.close();
